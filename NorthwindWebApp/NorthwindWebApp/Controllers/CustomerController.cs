@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NorthwindWebApp.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,7 +12,17 @@ namespace NorthwindWebApp.Controllers
         // GET: Customer
         public ActionResult Index()
         {
-            return View();
+            //1.luodaan luokan ilmentymä
+            northwindEntities entities = new northwindEntities();
+
+            //2.haetaan lista Customers-taulun olioista = tietokantakysely
+            List<Customers> model = entities.Customers.ToList();
+
+            //3.suljetaan tietokantayhteys
+            entities.Dispose();
+
+            //4.kerrotaan mitä näytetään
+            return View(model);
         }
     }
 }
