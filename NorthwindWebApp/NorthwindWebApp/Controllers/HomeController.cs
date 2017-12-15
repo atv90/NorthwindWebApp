@@ -10,6 +10,7 @@ namespace NorthwindWebApp.Controllers
     {
         public ActionResult Index()
         {
+            ViewBag.TestiViesti = "Tämä on testilause.";
             return View();
         }
 
