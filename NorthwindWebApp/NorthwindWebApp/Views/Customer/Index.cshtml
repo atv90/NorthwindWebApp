@@ -10,7 +10,11 @@
     <script type="text/javascript">
         $(function () {
             $(".näytäTilauksetNappi").click(function () {
-                alert("Nappia painettu!");
+                //alert("Nappia painettu!");
+                var customerId = $(this).data("customerid");
+                var p1 = $(this).parent();
+                //alert(customerId);
+                $("#orders_" + customerId).css("display", "block");
             });
         })
     </script>
@@ -62,7 +66,7 @@
     {
         <tr>
             <td>
-                <a href="#"><span class="glypchicon glyphicon-plus näytäTilauksetNappi"></span></a>
+                <a href="#"><span data-customerid="@Html.DisplayFor(modelItem => item.CustomerID)" class="glypchicon glyphicon-plus näytäTilauksetNappi"></span></a>
                 @Html.DisplayFor(modelItem => item.CustomerID)
             </td>
             <td>
@@ -103,7 +107,7 @@
 
         </tr>
 
-        <tr style="display: none;">
+        <tr style="display: none;" id="orders_@Html.DisplayFor(modelItem => item.CustomerID)">
             <td>&nbsp;</td>
             <td>Testi...</td>
         </tr>
