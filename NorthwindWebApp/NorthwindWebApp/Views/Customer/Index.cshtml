@@ -11,12 +11,35 @@
         $(function () {
             $(".näytäTilauksetNappi").click(function () {
                 //alert("Nappia painettu!");
+
+                //this viittaa siihen elementtiin mitä on klikattu
+                //pyydetään klikatulta elementiltä data-atribuutin arvoa jonka nimi on customerid
+                //palauttaa kyseisen asiakkaan idnimen
                 var customerId = $(this).data("customerid");
-                var p1 = $(this).parent();
+               // var p1 = $(this).parent();
                 //alert(customerId);
+
+                //näytetään piilotettu teksti lohkona
                 $("#orders_" + customerId).css("display", "block");
+
+                //url-muodostus johon mitä halutaan-pyyntö lähetetään
+                var url = "/customer/getorders/" + customerId;
+
+                //ajax-pyyntö yläpuoliseen osoitteeseen
+                $.ajax(url).done(function (data) {
+                   // alert("Palvelimelta tuli vastaus");
+
+                    var orderData = "";
+
+                    for (var i = 0; i < data.length; i++) {
+                        orderData += ((i + 1) + ": " + data[i].OrderId + " "+
+                            data[i].OrderDate + " " + data[i].CustomerId + "\r\n");
+                    }
+                    //näytetään käyttäjälle palvelimelta haetut tiedot
+                    $("#OrderText_" + customerId).html("<pre>" + orderData+"</pre>");
+                });
             });
-        })
+        });
     </script>
 
 }
@@ -104,12 +127,11 @@
                 @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
                 @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
             </td>
-
         </tr>
-
+        //alussa piilossa oleva teksti (ennen klikkausta)
         <tr style="display: none;" id="orders_@Html.DisplayFor(modelItem => item.CustomerID)">
             <td>&nbsp;</td>
-            <td>Testi...</td>
+            <td colspan="5" id="orderText_@Html.DisplayFor(modelItem => item.CustomerID)"><pre>Loading...</pre></td>
         </tr>
     }
 

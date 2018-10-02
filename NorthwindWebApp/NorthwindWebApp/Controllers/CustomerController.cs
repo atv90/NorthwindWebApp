@@ -24,5 +24,27 @@ namespace NorthwindWebApp.Controllers
             //4.kerrotaan mitä näytetään
             return View(model);
         }
+
+        public ActionResult GetOrders(string id)
+        {
+            northwindEntities entities = new northwindEntities();
+            List<Orders> orders = (from o in entities.Orders
+                                   where o.CustomerID == id
+                                   select o).ToList();
+            entities.Dispose();
+
+            List<SimpleOrderData> result = new List<SimpleOrderData>();
+           
+            foreach (Orders order in orders)
+            {
+                SimpleOrderData data = new SimpleOrderData();
+                data.CustomerId = order.CustomerID;
+                data.OrderId = order.OrderID;
+                data.OrderDate = order.OrderDate.ToString();
+                result.Add(data);
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
     }
 }
