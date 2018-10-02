@@ -10,41 +10,63 @@
     <script type="text/javascript">
         $(function () {
             $(".näytäTilauksetNappi").click(function () {
-                //alert("Nappia painettu!");
 
-                //this viittaa siihen elementtiin mitä on klikattu
-                //pyydetään klikatulta elementiltä data-atribuutin arvoa jonka nimi on customerid
-                //palauttaa kyseisen asiakkaan idnimen
-                var customerId = $(this).data("customerid");
-               // var p1 = $(this).parent();
-                //alert(customerId);
+                //onko plus-tyyli käytössä
+                var openMode = $(this).hasClass("glyphicon-plus");
+                if (openMode === true) {
+                    //ladataan tämän asiakkaan tilaukset
 
-                //näytetään piilotettu teksti lohkona
-                $("#orders_" + customerId).css("display", "block");
+                    alert("Nappia painettu!");
 
-                //url-muodostus johon mitä halutaan-pyyntö lähetetään
-                var url = "/customer/getorders/" + customerId;
+                    //this viittaa siihen elementtiin mitä on klikattu
+                    //pyydetään klikatulta elementiltä data-atribuutin arvoa jonka nimi on customerid
+                    //palauttaa kyseisen asiakkaan idnimen
+                    var customerId = $(this).data("customerid");
+                    // var p1 = $(this).parent();
+                    //alert(customerId);
 
-                //otetaan spanElementti talteen, jolloin sitä voidaan käyttää myöhemmin
-                var spanElement = this;
+                    //näytetään piilotettu teksti lohkona
+                    $("#orders_" + customerId).css("display", "block");
 
-                //ajax-pyyntö yläpuoliseen osoitteeseen
-                $.ajax(url).done(function (data) {
-                   // alert("Palvelimelta tuli vastaus");
+                    //url-muodostus johon mitä halutaan-pyyntö lähetetään
+                    var url = "/customer/getorders/" + customerId;
 
-                    var orderData = "";
+                    //otetaan spanElementti talteen, jolloin sitä voidaan käyttää myöhemmin
+                    var spanElement = this;
 
-                    for (var i = 0; i < data.length; i++) {
-                        orderData += ((i + 1) + ": " + data[i].OrderId + " "+
-                            data[i].OrderDate + " " + data[i].CustomerId + "\r\n");
-                    }
-                    //näytetään käyttäjälle palvelimelta haetut tiedot
-                    $("#OrderText_" + customerId).html("<pre>" + orderData + "</pre>");
+                    //ajax-pyyntö yläpuoliseen osoitteeseen
+                    $.ajax(url).done(function (data) {
+                        // alert("Palvelimelta tuli vastaus");
 
-                    //kun data ladattu, poistetaan +merkki ja lisätään -merkki tilalle
-                    $(spanElement).removeClass("glyphicon-plus");
-                    $(spanElement).addClass("glyphicon-minus");
-                });
+                        var orderData = "";
+
+                        for (var i = 0; i < data.length; i++) {
+                            orderData += ((i + 1) + ": " + data[i].OrderId + " " +
+                                data[i].OrderDate + " " + data[i].CustomerId + "\r\n");
+                        }
+                        //näytetään käyttäjälle palvelimelta haetut tiedot
+                        $("#OrderText_" + customerId).html("<pre>" + orderData + "</pre>");
+
+                        //kun data ladattu, poistetaan +merkki ja lisätään -merkki tilalle
+                        //spanElement viittaa ylemmän tason funktion this-elementtiin
+                        $(spanElement).removeClass("glyphicon-plus");
+                        $(spanElement).addClass("glyphicon-minus");
+
+
+                    });
+                }
+                else {
+                    //poistetaan minus ja lisätään plus
+                    //voidaan käyttää this-elemettiä koska ei olla ajax-funktion sisällä
+                    //vaan sitä edeltäneen funktion, missä this määritelty
+                    $(this).removeClass("glyphicon-minus");
+                    $(this).addClass("glyphicon-plus");
+
+                    //piilotetaan esiintuotu rivi
+                    customerId = $(this).data("customerid");
+                    $("#orders_" + customerId).css("display", "none");
+                }
+
             });
         });
     </script>
