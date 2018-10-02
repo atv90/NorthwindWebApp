@@ -25,6 +25,9 @@
                 //url-muodostus johon mitä halutaan-pyyntö lähetetään
                 var url = "/customer/getorders/" + customerId;
 
+                //otetaan spanElementti talteen, jolloin sitä voidaan käyttää myöhemmin
+                var spanElement = this;
+
                 //ajax-pyyntö yläpuoliseen osoitteeseen
                 $.ajax(url).done(function (data) {
                    // alert("Palvelimelta tuli vastaus");
@@ -36,7 +39,11 @@
                             data[i].OrderDate + " " + data[i].CustomerId + "\r\n");
                     }
                     //näytetään käyttäjälle palvelimelta haetut tiedot
-                    $("#OrderText_" + customerId).html("<pre>" + orderData+"</pre>");
+                    $("#OrderText_" + customerId).html("<pre>" + orderData + "</pre>");
+
+                    //kun data ladattu, poistetaan +merkki ja lisätään -merkki tilalle
+                    $(spanElement).removeClass("glyphicon-plus");
+                    $(spanElement).addClass("glyphicon-minus");
                 });
             });
         });
